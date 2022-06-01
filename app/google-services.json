@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "726234824957",
+    "firebase_url": "https://grocerystorenumberone-default-rtdb.firebaseio.com",
+    "project_id": "grocerystorenumberone",
+    "storage_bucket": "grocerystorenumberone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726234824957:android:a875cc158a44b404dc7e94",
+        "android_client_info": {
+          "package_name": "com.example.productoviynomerodin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726234824957-cmvj1e54n229te8ghjuv226i4h3o81n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiqV15FVBfB8JKLrLPqDyWeb0Not9aG-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726234824957-cmvj1e54n229te8ghjuv226i4h3o81n4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

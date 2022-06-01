@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Продуктовый номер 1</string>
+    <string name="text_view_password_login">Логин: </string>
+    <string name="text_view_password_text">Пароль: </string>
+    <string name="button_register_text">Зарегестрироваться</string>
+    <string name="button_enter_text">Войти</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="button_map_text">Карта с магазинами</string>
+    <string name="title_activity_map">Карта</string>
+    <string name="button_catalog_text">Каталог товаров</string>
+    <string name="button_profile_text">Профиль</string>
+    <string name="button_change_password_text">Изменить пароль</string>
+    <string name="button_delete_profile_text">Удалить профиль</string>
+    <string name="activity_discount_catalog_label">Список акций</string>
+    <string name="activity_catalog_label">Каталог товаров</string>
+    <string name="activity_enter_label">Вход в приложение</string>
+    <string name="activity_register_label">Регистрация</string>
+    <string name="button_discount_catalog_text">Список акций</string>
+    <string name="button_order_text">Сделать заказ</string>
+    <string name="text_view_products">Название продукта:</string>
+    <string name="text_view_count">Количество продуктов:</string>
+    <string name="button_add_product">Добавить продукт</string>
+    <string name="button_delete_product">Исключить продукт</string>
+    <string name="button_add_order_text">Заказать продукты</string>
+    <string name="text_view_total_price_text">Итог: 0</string>
+    <string name="button_user_card_text">Карта покупателя</string>
+    <string name="text_view_discount_text">Скидка по карте: 0%</string>
+    <string name="button_create_card_text">Завести карту</string>
+</resources>
