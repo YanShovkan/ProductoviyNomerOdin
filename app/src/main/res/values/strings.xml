@@ -17,7 +17,7 @@
     <string name="activity_register_label">Регистрация</string>
     <string name="button_discount_catalog_text">Список акций</string>
     <string name="button_order_text">Сделать заказ</string>
-    <string name="text_view_products">Название продукта:</string>
+    <string name="text_view_products">Продукт:</string>
     <string name="text_view_count">Количество продуктов:</string>
     <string name="button_add_product">Добавить продукт</string>
     <string name="button_delete_product">Исключить продукт</string>
@@ -26,4 +26,7 @@
     <string name="button_user_card_text">Карта покупателя</string>
     <string name="text_view_discount_text">Скидка по карте: 0%</string>
     <string name="button_create_card_text">Завести карту</string>
+    <string name="text_view_shops">Адрес магазина:</string>
+    <string name="text_view_product">Поиск продукта:</string>
+    <string name="button_search_product">Найти продукт</string>
 </resources>

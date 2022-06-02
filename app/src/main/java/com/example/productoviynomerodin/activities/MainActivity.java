@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
                 v -> {
                     Intent intent = new Intent(MainActivity.this, OrderActivity.class);
                     intent.putExtra("userId", userId);
-                    intent.putExtra("id", "");
                     startActivity(intent);
                 }
         );

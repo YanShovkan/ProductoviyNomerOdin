@@ -5,11 +5,13 @@ public class BasketModel {
     public long date;
     public float totalPrice;
     public String userId;
+    public String adress;
 
-    public BasketModel(long date,float totalPrice, String userId){
+    public BasketModel(long date,float totalPrice, String userId, String adress){
         this.date = date;
         this.totalPrice = totalPrice;
         this.userId = userId;
+        this.adress = adress;
     }
 
     public BasketModel(){

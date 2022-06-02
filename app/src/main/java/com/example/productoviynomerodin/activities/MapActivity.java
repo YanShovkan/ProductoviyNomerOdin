@@ -18,6 +18,7 @@ import com.yandex.mapkit.MapKitFactory;
 import com.yandex.mapkit.geometry.Point;
 import com.yandex.mapkit.map.CameraPosition;
 import com.yandex.mapkit.mapview.MapView;
+import com.yandex.mapkit.user_location.UserLocationLayer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,6 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         MapKitFactory.setApiKey("272f5332-b0fa-4990-81f0-62527a9a64a9");
         MapKitFactory.initialize(this);
-
 
         // Укажите имя Activity вместо map.
         setContentView(R.layout.activity_map);
@@ -56,7 +56,6 @@ public class MapActivity extends AppCompatActivity {
                     for(ShopModel shop : shops){
                         mapView.getMap().getMapObjects().addPlacemark(new Point(shop.longitude, shop.latitude));
                     }
-
                     mapView.getMap().move(
                             new CameraPosition(new Point(shops.get(0).longitude, shops.get(0).latitude), 20.0f, 0.0f, 0.0f),
                             new Animation(Animation.Type.SMOOTH, 3),

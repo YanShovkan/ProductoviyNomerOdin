@@ -20,8 +20,54 @@
             android:orientation="horizontal"
             android:layout_margin="10dp" >
             <TextView
+                android:id="@+id/text_view_shops"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_view_shops"
+                android:layout_weight="2"/>
+
+            <Spinner
+                android:id="@+id/spinner_shops"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp" >
+            <Button
+                android:id="@+id/button_search_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:text="@string/button_search_product"/>
+
+            <EditText
+                android:id="@+id/edit_text_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_margin="10dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp" >
+            <TextView
                 android:id="@+id/text_view_products"
                 android:gravity="center"
+                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_view_products"
@@ -34,6 +80,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"/>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

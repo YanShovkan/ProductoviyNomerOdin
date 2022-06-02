@@ -24,6 +24,7 @@ public class BasketLogic {
         basketModel.date  = Long.parseLong(basket.get("date").toString());
         basketModel.totalPrice =  Float.parseFloat(basket.get("totalPrice").toString());
         basketModel.userId =  basket.get("userId").toString();
+        basketModel.adress = basket.get("adress").toString();
 
         return basketModel;
     }
