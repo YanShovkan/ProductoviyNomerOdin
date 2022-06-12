@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,17 +19,24 @@ import com.example.productoviynomerodin.R;
 import com.example.productoviynomerodin.database.logic.BasketLogic;
 import com.example.productoviynomerodin.database.logic.BasketProductLogic;
 import com.example.productoviynomerodin.database.logic.CardLogic;
+import com.example.productoviynomerodin.database.logic.MovementOfGoodLogic;
 import com.example.productoviynomerodin.database.logic.ProductLogic;
 import com.example.productoviynomerodin.database.logic.ShopLogic;
+import com.example.productoviynomerodin.database.logic.TablePartLogic;
 import com.example.productoviynomerodin.database.models.BasketModel;
 import com.example.productoviynomerodin.database.models.BasketProductModel;
 import com.example.productoviynomerodin.database.models.CardModel;
+import com.example.productoviynomerodin.database.models.MovementOfGoodModel;
 import com.example.productoviynomerodin.database.models.ProductModel;
 import com.example.productoviynomerodin.database.models.ShopModel;
+import com.example.productoviynomerodin.database.models.TablePartModel;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +49,8 @@ public class OrderActivity extends AppCompatActivity {
     ProductLogic productLogic;
     CardLogic cardLogic;
     ShopLogic shopLogic;
+    TablePartLogic tablePartLogic;
+    MovementOfGoodLogic movementOfGoodLogic;
 
     Button button_search_product;
     Button button_add_order;
@@ -55,7 +65,7 @@ public class OrderActivity extends AppCompatActivity {
     List<ShopModel> shops;
     List<ProductModel> allProducts;
     List<ProductModel> products;
-
+    Map<String, Integer> availableProducts;
     CardModel card;
     float cardDiscount = 0;
 
@@ -64,6 +74,8 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         String userId = getIntent().getExtras().getString("userId");
+        List<TablePartModel> tableParts = new LinkedList<>();
+        List<MovementOfGoodModel> movementOfGoods = new LinkedList<>();
 
         text_view_total_price = findViewById(R.id.text_view_total_price);
         edit_text_count = findViewById(R.id.edit_text_count);
@@ -81,13 +93,15 @@ public class OrderActivity extends AppCompatActivity {
         productLogic = new ProductLogic();
         cardLogic = new CardLogic();
         shopLogic = new ShopLogic();
+        tablePartLogic = new TablePartLogic();
+        movementOfGoodLogic = new MovementOfGoodLogic();
 
         shops = new LinkedList<>();
 
         products = new LinkedList<>();
         allProducts = new LinkedList<>();
         basketProducts = new LinkedList<>();
-
+        availableProducts = new HashMap<>();
         cardDiscount = 0;
 
         ref.child("Cards").get().addOnCompleteListener(task -> {
@@ -145,12 +159,67 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
 
+        ref.child("MovementOfGoods").get().addOnCompleteListener(MovementOfGoods -> {
+            if (((Map<String, Object>) MovementOfGoods.getResult().getValue()) != null) {
+
+                for (Map.Entry<String, Object> movementOfGood : ((Map<String, Object>) MovementOfGoods.getResult().getValue()).entrySet()) {
+                    movementOfGoods.add(movementOfGoodLogic.convertToMovementOfGood(movementOfGood.getKey(), (Map) movementOfGood.getValue()));
+                }
+
+                ref.child("TableParts").get().addOnCompleteListener(taskTableParts -> {
+                    if (((Map<String, Object>) taskTableParts.getResult().getValue()) != null) {
+
+                        for (Map.Entry<String, Object> tablePart : ((Map<String, Object>) taskTableParts.getResult().getValue()).entrySet()) {
+                            tableParts.add(tablePartLogic.convertToTablePart(tablePart.getKey(), (Map) tablePart.getValue()));
+                        }
+
+                        for(MovementOfGoodModel movementOfGood : movementOfGoods){
+                            for(TablePartModel tablePart : tableParts){
+                                if(tablePart.movmentOfGoodId.equals(movementOfGood.id)){
+                                    if(movementOfGood.type.equals("поступление")){
+                                        if(availableProducts.containsKey(tablePart.productId)){
+                                            availableProducts.put(tablePart.productId, availableProducts.get(tablePart.productId) + tablePart.count);
+                                        }
+                                        else{
+                                            availableProducts.put(tablePart.productId, tablePart.count);
+                                        }
+                                    }
+                                    else{
+                                        if(availableProducts.containsKey(tablePart.productId)){
+                                            availableProducts.put(tablePart.productId, availableProducts.get(tablePart.productId) - tablePart.count);
+                                        }
+                                        else{
+                                            availableProducts.put(tablePart.productId, -tablePart.count);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+
         button_add_product.setOnClickListener(
                 v -> {
                     if (edit_text_count.getText().toString().isEmpty()) {
                         return;
                     }
                     String productId = products.get(spinnerProducts.getSelectedItemPosition()).id;
+
+                    if(!availableProducts.containsKey(productId)){
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "На складе нет данного товара", Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
+                    if(availableProducts.get(productId) - Integer.valueOf(edit_text_count.getText().toString()) < 0){
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "На складе есть лишь " + availableProducts.get(productId) + " единиц товара", Toast.LENGTH_SHORT);
+                        toast.show();
+                        return;
+                    }
                     for (BasketProductModel basketProduct : basketProducts) {
                         if (basketProduct.productId.equals(productId)) {
                             basketProducts.remove(basketProduct);
@@ -213,6 +282,8 @@ public class OrderActivity extends AppCompatActivity {
                                 }
                             }
 
+                            String currentBasketId = currentBasket.id;
+
                             if (card != null) {
                                 float totalSpent = 0;
                                 for (BasketModel basket : baskets) {
@@ -221,7 +292,6 @@ public class OrderActivity extends AppCompatActivity {
                                     }
                                 }
                                 totalSpent += calculateTotalPrice();
-
                                 float discount = 1.5f;
                                 if (totalSpent > 5000) {
                                     discount = 3f;
@@ -237,14 +307,36 @@ public class OrderActivity extends AppCompatActivity {
                                 }
 
                                 cardLogic.updateDiscount(card.id, discount);
-
-                                for (BasketProductModel basketProduct : basketProducts) {
-                                    basketProduct.basketId = currentBasket.id;
-                                    basketProductLogic.addBasketProduct(basketProduct);
-                                }
-
-                                this.finish();
                             }
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                            movementOfGoodLogic.addMovementOfGood(new MovementOfGoodModel(dateFormat.format(new Date(System.currentTimeMillis())), "списание"));
+
+                            List<MovementOfGoodModel> currentMovementOfGoods = new LinkedList<>();
+
+                            ref.child("MovementOfGoods").get().addOnCompleteListener(MovementOfGoods -> {
+                                if (((Map<String, Object>) MovementOfGoods.getResult().getValue()) != null) {
+
+                                    for (Map.Entry<String, Object> movementOfGood : ((Map<String, Object>) MovementOfGoods.getResult().getValue()).entrySet()) {
+                                        currentMovementOfGoods.add(movementOfGoodLogic.convertToMovementOfGood(movementOfGood.getKey(), (Map) movementOfGood.getValue()));
+                                    }
+
+                                    MovementOfGoodModel currentMovementOfGood = null;
+
+                                    for (MovementOfGoodModel movementOfGood : currentMovementOfGoods) {
+                                        if(!movementOfGoods.contains(movementOfGood)){
+                                            currentMovementOfGood = movementOfGood;
+                                        }
+                                    }
+
+                                    for (BasketProductModel basketProduct : basketProducts) {
+                                        basketProduct.basketId = currentBasketId;
+                                        basketProductLogic.addBasketProduct(basketProduct);
+                                        tablePartLogic.addTablePart(new TablePartModel(basketProduct.productId, currentMovementOfGood.id, basketProduct.count));
+                                    }
+
+                                    this.finish();
+                                }
+                            });
                         }
                     });
                 }

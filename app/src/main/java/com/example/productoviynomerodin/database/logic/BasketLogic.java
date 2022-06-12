@@ -13,10 +13,6 @@ public class BasketLogic {
         db.child("Baskets").push().setValue(basket);
     }
 
-    public void updatePrice(String id, float totalPrice){
-        db.child("Baskets").child(id).child("totalPrice").setValue(totalPrice);
-    }
-
     public BasketModel convertToBasket(String id, Map basket){
         BasketModel basketModel = new BasketModel();
 
@@ -27,9 +23,5 @@ public class BasketLogic {
         basketModel.adress = basket.get("adress").toString();
 
         return basketModel;
-    }
-
-    public void deleteBasket(String id){
-        db.child("Baskets/" + id).removeValue();
     }
 }
